@@ -12,7 +12,10 @@ int sockfd;
 
 void sendfile(int fd, const char *path) {
   char buf[1024];
-  FILE *peanutmap = fopen(path, "r");
+  char p[1024];
+  snprintf(p, sizeof(p), "/var/peanut/%s", path);
+
+  FILE *peanutmap = fopen(p, "r");
   if (peanutmap == NULL) {
     snprintf(buf, sizeof(buf), "page not found!\n");
     write(fd, buf, strlen(buf));
@@ -38,7 +41,7 @@ void handle_con(int fd) {
   printf("%s\n", buf);
 
   if (strcmp(buf, "/") == 0 || strcmp(buf, "") == 0) {
-    sendfile(fd, "./peanutmap");
+    sendfile(fd, "peanutmap");
   } else {
     sendfile(fd, buf);
   }
