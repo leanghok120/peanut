@@ -10,19 +10,39 @@
 
 int sockfd;
 
-void handle_con(int fd) {
+void sendfile(int fd, const char *path) {
   char buf[1024];
-  int n = read(fd, buf, sizeof(buf));
-  if (n <= 0) {
+  FILE *peanutmap = fopen(path, "r");
+  if (peanutmap == NULL) {
+    snprintf(buf, sizeof(buf), "page not found!\n");
+    write(fd, buf, strlen(buf));
     close(fd);
     return;
   }
 
-  buf[n] = '\0';
-  printf("%s", buf);
+  while ((fgets(buf, sizeof(buf), peanutmap)) != NULL) {
+    write(fd, buf, strlen(buf));
+  }
+  fclose(peanutmap);
+}
 
-  snprintf(buf, sizeof(buf), "Welcome!\nYou are using the peanut protocol!\n");
-  write(fd, buf, strlen(buf));
+void handle_con(int fd) {
+  char buf[1024];
+  int n = read(fd, buf, sizeof(buf) - 1);
+  if (n <= 0) {
+    close(fd);
+    return;
+  }
+  buf[n] = '\0';
+  buf[strcspn(buf, "\n")] = '\0';
+  printf("%s\n", buf);
+
+  if (strcmp(buf, "/") == 0 || strcmp(buf, "") == 0) {
+    sendfile(fd, "./peanutmap");
+  } else {
+    sendfile(fd, buf);
+  }
+
   close(fd);
 }
 
