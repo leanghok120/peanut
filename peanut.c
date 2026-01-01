@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#define PORT 6767
+#define PORT 5050
 
 int sockfd;
 
