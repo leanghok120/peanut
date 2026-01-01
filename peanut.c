@@ -12,17 +12,17 @@ int sockfd;
 
 void handle_con(int fd) {
   char buf[1024];
-  while (1) {
-    int n = read(fd, buf, sizeof(buf));
-    if (n <= 0) break;
-
-    buf[n] = '\0';
-    printf("%s", buf);
-
-    snprintf(buf, sizeof(buf), "Welcome!\nYou are using the peanut protocol!\n");
-    write(fd, buf, strlen(buf));
+  int n = read(fd, buf, sizeof(buf));
+  if (n <= 0) {
+    close(fd);
+    return;
   }
 
+  buf[n] = '\0';
+  printf("%s", buf);
+
+  snprintf(buf, sizeof(buf), "Welcome!\nYou are using the peanut protocol!\n");
+  write(fd, buf, strlen(buf));
   close(fd);
 }
 
