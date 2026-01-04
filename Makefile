@@ -1,6 +1,8 @@
-peanut: peanut.c
-	gcc -o peanut peanut.c
+CC = clang
 
-install: peanut
+peanutd: peanutd.c
+	$(CC) -o peanutd peanutd.c
+
+install: peanutd
 	cp peanutmap /var/peanut/
-	mv peanut /usr/local/bin
+	mv peanutd /usr/local/bin
